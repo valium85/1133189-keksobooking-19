@@ -152,17 +152,56 @@ var cardTemplate = document.querySelector('#card')
     .content
     .querySelector('.popup');
 
+var renderCardTemplate = function (mock) {
+  var card = cardTemplate.cloneNode(true);
+  card.querySelector('.popup__avatar').src = mock.author.avatar;
+  card.querySelector('.popup__title').textContent = mock.offer.title;
+  card.querySelector('.popup__text--price').textContent = mock.offer.price + '₽/ночь';
+  card.querySelector('.popup__type').textContent = getHousingType(mock);
+  card.querySelector('.popup__text--capacity').textContent = mock.offer.rooms + ' комнат для ' + mock.offer.guests + ' гостей';
+  card.querySelector('.popup__text--time').textContent = 'Заезд после ' + mock.offer.checkin + ', выезд до ' + mock.offer.checkout;
+  card.querySelector('.popup__description').textContent = mock.offer.description;
+  return card;
+};
+
+var renderFeatures = function (mock) {
+  var featuresList = document.querySelector('.popup__features');
+  var featuresCollection = document.querySelectorAll('.popup__feature');
+
+  for (var i = 0; i < featuresCollection.length; i++) {
+    featuresList.removeChild(featuresCollection[i]);
+  }
+
+  for (var j = 0; j < mock.offer.features.length; j++) {
+    var newFeature = document.createElement('li');
+    var featureClass = 'popup__feature--' + mock.offer.features[j];
+    newFeature.classList.add('popup__feature');
+    newFeature.classList.add(featureClass);
+    featuresList.appendChild(newFeature);
+  }
+
+  return featuresList;
+};
+
+var renderPhotos = function (mock) {
+  var photosBlock = document.querySelector('.popup__photos');
+  var photo = document.querySelector('.popup__photo').cloneNode(true);
+  photosBlock.removeChild(document.querySelector('.popup__photo'));
+
+  for (var j = 0; j < mock.offer.photos.length; j++) {
+    var newPhoto = photo;
+    newPhoto.src = mock.offer.photos[j];
+    photosBlock.appendChild(newPhoto);
+  }
+
+  return photosBlock;
+};
 
 var renderCard = function (mock) {
-  var card = cardTemplate.cloneNode(true);
-  card.querySelector('.popup__title') = mock.offer.title;
-  card.querySelector('.popup__text--price') = mock.offer.price + '₽/ночь';
-  card.querySelector('.popup__type') = getHousingType(mock);
-  card.querySelector('.popup__text--capacity') = mock.offer.rooms + ' комнат для ' + mock.offer.guests + ' гостей';
-  card.querySelector('.popup__text--time') = 'Заезд после ' + mock.offer.checkin + ', выезд до ' + mock.offer.checkout;
+  map.insertBefore(renderCardTemplate(mock), document.querySelector('.map__filters-container'));
+  renderFeatures(mock);
+  renderPhotos(mock);
+};
 
-  card.querySelector('.popup__features') = mock.offer.features;
-
-  card.querySelector('.popup__description') = mock.offer.description;
-}
+renderCard(mockAds[0]);
 
