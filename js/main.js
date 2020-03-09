@@ -166,11 +166,7 @@ var renderCardTemplate = function (mock) {
 
 var renderFeatures = function (mock) {
   var featuresList = document.querySelector('.popup__features');
-  var featuresCollection = document.querySelectorAll('.popup__feature');
-
-  for (var i = 0; i < featuresCollection.length; i++) {
-    featuresList.removeChild(featuresCollection[i]);
-  }
+  featuresList.innerHTML = '';
 
   for (var j = 0; j < mock.offer.features.length; j++) {
     var newFeature = document.createElement('li');
@@ -185,11 +181,11 @@ var renderFeatures = function (mock) {
 
 var renderPhotos = function (mock) {
   var photosBlock = document.querySelector('.popup__photos');
-  var photo = document.querySelector('.popup__photo').cloneNode(true);
-  photosBlock.removeChild(document.querySelector('.popup__photo'));
+  var photo = document.querySelector('.popup__photo');
+  photosBlock.innerHTML = '';
 
   for (var j = 0; j < mock.offer.photos.length; j++) {
-    var newPhoto = photo;
+    var newPhoto = photo.cloneNode(true);
     newPhoto.src = mock.offer.photos[j];
     photosBlock.appendChild(newPhoto);
   }
@@ -204,4 +200,5 @@ var renderCard = function (mock) {
 };
 
 renderCard(mockAds[0]);
+
 
