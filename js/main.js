@@ -1,5 +1,28 @@
 'use strict';
 
+// var ESC_KEY = 'Escape';
+var ENTER_KEY = 'Enter';
+var CLICK = 1;
+
+// Преобразование в неактивное состояние
+
+var adForm = document.querySelector('.ad-form');
+var adFormItems = adForm.children;
+var mapFilters = document.querySelector('.map__filters');
+var mapFiltersItems = mapFilters.children;
+
+var makeFormsUnactive = function () {
+  for (var i = 0; i < adFormItems.length; i++) {
+    adFormItems[i].setAttribute('disabled', 'disabled');
+  }
+
+  for (var j = 0; j < mapFiltersItems.length; j++) {
+    mapFiltersItems[j].setAttribute('disabled', 'disabled');
+  }
+};
+
+makeFormsUnactive();
+
 // Блок генерации моков
 
 var ADS = 8;
@@ -107,18 +130,19 @@ var mockAds = generateMocks(ADS); // Массив из 8 генерирующи�
 
 // Блок отрисовки моков-пинов
 
-document.querySelector('.map').classList.remove('map--faded');
-
 var mapPins = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
 
+var pinXOffset = 65 / 2; // Смещение по горизонтали для кончика булавки относительно л/в угла элемента
+var pinYOffset = 65 + 22; // Смещение по вертикали для кончика булавки л/в угла элемента
+
 var renderMockPin = function (mock) {
   var mockPin = pinTemplate.cloneNode(true);
 
-  mockPin.style.left = (mock.location.x + 65 / 2) + 'px';
-  mockPin.style.top = (mock.location.y + 65) + 'px';
+  mockPin.style.left = (mock.location.x + pinXOffset) + 'px';
+  mockPin.style.top = (mock.location.y + pinYOffset) + 'px';
   mockPin.querySelector('img').src = mock.author.avatar;
   mockPin.querySelector('img').alt = mock.offer.title;
 
@@ -133,7 +157,6 @@ var renderAllMocks = function (mocksArr) {
   mapPins.appendChild(fragment);
 };// Cоздает фрагмент с пинами, потом отрисовывает весь фрагмент
 
-renderAllMocks(mockAds);
 
 // Блок отрисовки карточки
 
@@ -199,6 +222,49 @@ var renderCard = function (mock) {
   renderPhotos(mock);
 };
 
-renderCard(mockAds[0]);
+// Преобразование в активное состояние
+
+var mapPinMain = document.querySelector('.map__pin--main');
+var formAddress = adForm.querySelector('#address');
 
 
+var getPinAddress = function (pinButton) {
+  var buttonLeft = pinButton.style.left;
+  var buttonTop = pinButton.style.top;
+  var x = parseInt(buttonLeft, 10) + Math.round(pinXOffset);
+  var y = parseInt(buttonTop, 10) + Math.round(pinYOffset);
+  return x + ', ' + y;
+};
+
+var makeFormsActive = function () {
+  for (var i = 0; i < adFormItems.length; i++) {
+    adFormItems[i].removeAttribute('disabled');
+  }
+
+  for (var j = 0; j < mapFiltersItems.length; j++) {
+    mapFiltersItems[j].removeAttribute('disabled');
+  }
+
+  adForm.classList.remove('ad-form--disabled');
+  formAddress.value = getPinAddress(mapPinMain);
+};
+
+var makeOtherActive = function () {
+  document.querySelector('.map').classList.remove('map--faded');
+  renderAllMocks(mockAds);
+  renderCard(mockAds[0]);
+};
+
+mapPinMain.addEventListener('mousedown', function (evt) {
+  if (evt.which === CLICK) {
+    makeFormsActive();
+    makeOtherActive();
+  }
+});
+
+mapPinMain.addEventListener('keydown', function (evt) {
+  if (evt.key === ENTER_KEY) {
+    makeFormsActive();
+    makeOtherActive();
+  }
+});
