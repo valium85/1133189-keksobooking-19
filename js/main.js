@@ -268,3 +268,27 @@ mapPinMain.addEventListener('keydown', function (evt) {
     makeOtherActive();
   }
 });
+
+// Валидация формы
+
+var roomOptionsSelect = adForm.querySelector('#room_number');
+var roomOptions = roomOptionsSelect.children;
+var capacityOptionsSelect = adForm.querySelector('#capacity');
+
+var checkGuestHousing = function () {
+  var currentRoomNumber = parseInt(roomOptionsSelect.value);
+  var currentCapacity = parseInt(capacityOptionsSelect.value);
+  if ((currentRoomNumber === 100) && (currentCapacity !== 0)) {
+    console.log('Такое жилище не предназначено для гостей');
+  } else if (currentRoomNumber < currentCapacity) {
+    console.log('В жилье с ' + currentRoomNumber + ' комнатой(-ами) может проживать не более ' + currentRoomNumber + ' гостей');
+  }
+};
+
+roomOptionsSelect.addEventListener('change', function (evt) {
+  checkGuestHousing(evt);
+});
+
+capacityOptionsSelect.addEventListener('change', function (evt) {
+  checkGuestHousing(evt);
+});
