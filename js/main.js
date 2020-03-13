@@ -272,23 +272,23 @@ mapPinMain.addEventListener('keydown', function (evt) {
 // Валидация формы
 
 var roomOptionsSelect = adForm.querySelector('#room_number');
-var roomOptions = roomOptionsSelect.children;
 var capacityOptionsSelect = adForm.querySelector('#capacity');
 
 var checkGuestHousing = function (select) {
-  var currentRoomNumber = parseInt(roomOptionsSelect.value);
-  var currentCapacity = parseInt(capacityOptionsSelect.value);
-  console.log(currentCapacity);
+  var currentRoomNumber = parseInt(roomOptionsSelect.value, 10);
+  var currentCapacity = parseInt(capacityOptionsSelect.value, 10);
   if ((currentRoomNumber === 100) && (currentCapacity !== 0)) {
     select.setCustomValidity('Такое жилище не предназначено для гостей');
-    //console.log('Такое жилище не предназначено для гостей');
   } else if (currentRoomNumber < currentCapacity) {
     select.setCustomValidity('В жилье с ' + currentRoomNumber + ' комнатой(-ами) может проживать не более ' + currentRoomNumber + ' гостей');
-    //console.log('В жилье с ' + currentRoomNumber + ' комнатой(-ами) может проживать не более ' + currentRoomNumber + ' гостей');
   } else {
-    select.setCustomValidity('');
+    roomOptionsSelect.setCustomValidity('');
+    capacityOptionsSelect.setCustomValidity('');
   }
 };
+
+checkGuestHousing(roomOptionsSelect);
+checkGuestHousing(capacityOptionsSelect);
 
 roomOptionsSelect.addEventListener('change', function () {
   checkGuestHousing(roomOptionsSelect);
