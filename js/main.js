@@ -275,20 +275,25 @@ var roomOptionsSelect = adForm.querySelector('#room_number');
 var roomOptions = roomOptionsSelect.children;
 var capacityOptionsSelect = adForm.querySelector('#capacity');
 
-var checkGuestHousing = function () {
+var checkGuestHousing = function (select) {
   var currentRoomNumber = parseInt(roomOptionsSelect.value);
   var currentCapacity = parseInt(capacityOptionsSelect.value);
+  console.log(currentCapacity);
   if ((currentRoomNumber === 100) && (currentCapacity !== 0)) {
-    console.log('Такое жилище не предназначено для гостей');
+    select.setCustomValidity('Такое жилище не предназначено для гостей');
+    //console.log('Такое жилище не предназначено для гостей');
   } else if (currentRoomNumber < currentCapacity) {
-    console.log('В жилье с ' + currentRoomNumber + ' комнатой(-ами) может проживать не более ' + currentRoomNumber + ' гостей');
+    select.setCustomValidity('В жилье с ' + currentRoomNumber + ' комнатой(-ами) может проживать не более ' + currentRoomNumber + ' гостей');
+    //console.log('В жилье с ' + currentRoomNumber + ' комнатой(-ами) может проживать не более ' + currentRoomNumber + ' гостей');
+  } else {
+    select.setCustomValidity('');
   }
 };
 
-roomOptionsSelect.addEventListener('change', function (evt) {
-  checkGuestHousing(evt);
+roomOptionsSelect.addEventListener('change', function () {
+  checkGuestHousing(roomOptionsSelect);
 });
 
-capacityOptionsSelect.addEventListener('change', function (evt) {
-  checkGuestHousing(evt);
+capacityOptionsSelect.addEventListener('change', function () {
+  checkGuestHousing(capacityOptionsSelect);
 });
