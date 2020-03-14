@@ -146,7 +146,10 @@ var renderMockPin = function (mock) {
   mockPin.style.top = (mock.location.y + pinYOffset) + 'px';
   mockPin.querySelector('img').src = mock.author.avatar;
   mockPin.querySelector('img').alt = mock.offer.title;
-
+  // mockPin.setAttribute('index',i)
+  // mockPin.addEventListener('',function(){
+  // openModal(mock)
+  // })
   return mockPin;
 };// Функция для отрисовки пина, на вход принимает данные из архива, сгенерированного раньше (объект)
 
@@ -253,7 +256,6 @@ var makeFormsActive = function () {
 var makeOtherActive = function () {
   document.querySelector('.map').classList.remove('map--faded');
   renderAllMocks(mockAds);
-  renderCard(mockAds[0]);
 };
 
 mapPinMain.addEventListener('mousedown', function (evt) {
@@ -270,39 +272,33 @@ mapPinMain.addEventListener('keydown', function (evt) {
   }
 });
 
+// Работа с карточками (открытие, закрытие, проч)
+
 // Валидация формы
 
 // Соответствие количества комнат и гостей
 
 var roomOptionsSelect = adForm.querySelector('#room_number');
 var capacityOptionsSelect = adForm.querySelector('#capacity');
-//capacityOptionsSelect.selectedIndex = 2;
 
 var checkGuestHousing = function (select) {
   var currentRoomNumber = parseInt(roomOptionsSelect.value, 10);
   var currentCapacity = parseInt(capacityOptionsSelect.value, 10);
-  console.log(currentRoomNumber);
-  console.log(currentCapacity);
   roomOptionsSelect.setCustomValidity('');
   capacityOptionsSelect.setCustomValidity('');
   if ((currentRoomNumber === 100) && (currentCapacity !== 0)) {
     select.setCustomValidity('Такое жилище не предназначено для гостей');
-    console.log('1 условие');
   } else if ((currentRoomNumber !== 100) && (currentCapacity === 0)) {
     select.setCustomValidity('Нужно выбрать как миниму одного гостя');
-    console.log('1 условие');
   } else if ((currentCapacity > 0) && (currentRoomNumber < currentCapacity)) {
     select.setCustomValidity('В жилье с ' + currentRoomNumber + ' комнатой(-ами) может проживать не более ' + currentRoomNumber + ' гостей');
-    console.log('3 условие');
   } else {
     roomOptionsSelect.setCustomValidity('');
     capacityOptionsSelect.setCustomValidity('');
-    console.log('4 - все окей');
   }
 };
 
 checkGuestHousing(roomOptionsSelect);
-checkGuestHousing(capacityOptionsSelect);
 
 roomOptionsSelect.addEventListener('change', function () {
   checkGuestHousing(roomOptionsSelect);
@@ -320,8 +316,6 @@ var priceInput = adForm.querySelector('#price');
 var setMinPrice = function () {
   var currentType = typeOptionsSelect.value;
   var currentMinPrice;
-  roomOptionsSelect.setCustomValidity('');
-  capacityOptionsSelect.setCustomValidity('');
 
   for (var i = 0; i < TYPES.length; i++) {
     if (currentType === TYPES[i]) {
