@@ -1,6 +1,6 @@
 'use strict';
 
-// var ESC_KEY = 'Escape';
+var ESC_KEY = 'Escape';
 var ENTER_KEY = 'Enter';
 var CLICK = 1;
 
@@ -146,10 +146,14 @@ var renderMockPin = function (mock) {
   mockPin.style.top = (mock.location.y + pinYOffset) + 'px';
   mockPin.querySelector('img').src = mock.author.avatar;
   mockPin.querySelector('img').alt = mock.offer.title;
-  // mockPin.setAttribute('index',i)
-  // mockPin.addEventListener('',function(){
-  // openModal(mock)
-  // })
+  mockPin.addEventListener('click', function () {
+    renderCard(mock);
+  });
+  mockPin.addEventListener('keydown', function (evt) {
+    if (evt.key === ENTER_KEY) {
+      renderCard(mock);
+    }
+  });
   return mockPin;
 };// Функция для отрисовки пина, на вход принимает данные из архива, сгенерированного раньше (объект)
 
@@ -224,6 +228,18 @@ var renderCard = function (mock) {
   map.insertBefore(renderCardTemplate(mock), document.querySelector('.map__filters-container'));
   renderFeatures(mock);
   renderPhotos(mock);
+
+  var popupWindow = map.querySelector('.popup');
+  var popupCloseButton = popupWindow.querySelector('.popup__close');
+
+  popupCloseButton.addEventListener('click', function () {
+    popupWindow.remove();
+  });
+  document.addEventListener('keydown', function (evt) {
+    if (evt.key === ESC_KEY) {
+      popupWindow.remove();
+    }
+  });
 };
 
 // Преобразование в активное состояние
@@ -271,8 +287,6 @@ mapPinMain.addEventListener('keydown', function (evt) {
     makeOtherActive();
   }
 });
-
-// Работа с карточками (открытие, закрытие, проч)
 
 // Валидация формы
 
@@ -344,5 +358,3 @@ timeInOptionsSelect.addEventListener('change', function () {
 timeOutOptionsSelect.addEventListener('change', function () {
   timeInOptionsSelect.value = timeOutOptionsSelect.value;
 });
-
-
