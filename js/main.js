@@ -1,6 +1,6 @@
 'use strict';
 
-// var ESC_KEY = 'Escape';
+var ESC_KEY = 'Escape';
 var ENTER_KEY = 'Enter';
 var CLICK = 1;
 
@@ -28,6 +28,7 @@ makeFormsUnactive();
 var ADS = 8;
 var TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var TYPES_RUS = ['Дворец', 'Квартира', 'Дом', 'Бунгало'];
+var MIN_PRICES = [10000, 1000, 5000, 0];
 var CHECK_TIMES = ['12:00', '13:00', '14:00'];
 var FEATURES_LIST = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var PHOTOS_LIST = [
@@ -145,7 +146,14 @@ var renderMockPin = function (mock) {
   mockPin.style.top = (mock.location.y + pinYOffset) + 'px';
   mockPin.querySelector('img').src = mock.author.avatar;
   mockPin.querySelector('img').alt = mock.offer.title;
-
+  mockPin.addEventListener('click', function () {
+    renderCard(mock);
+  });
+  mockPin.addEventListener('keydown', function (evt) {
+    if (evt.key === ENTER_KEY) {
+      renderCard(mock);
+    }
+  });
   return mockPin;
 };// Функция для отрисовки пина, на вход принимает данные из архива, сгенерированного раньше (объект)
 
@@ -175,8 +183,26 @@ var cardTemplate = document.querySelector('#card')
     .content
     .querySelector('.popup');
 
-var renderCardTemplate = function (mock) {
+var addCardTemplate = function () {
   var card = cardTemplate.cloneNode(true);
+  card.classList.add('hidden');
+  map.insertBefore(card, document.querySelector('.map__filters-container'));
+
+  var cardCloseButton = card.querySelector('.popup__close');
+
+  cardCloseButton.addEventListener('click', function () {
+    card.classList.add('hidden');
+  });
+
+  document.addEventListener('keydown', function (evt) {
+    if (evt.key === ESC_KEY) {
+      card.classList.add('hidden');
+    }
+  });
+};
+
+var fillCardTemplate = function (mock) {
+  var card = map.querySelector('.popup');
   card.querySelector('.popup__avatar').src = mock.author.avatar;
   card.querySelector('.popup__title').textContent = mock.offer.title;
   card.querySelector('.popup__text--price').textContent = mock.offer.price + '₽/ночь';
@@ -217,7 +243,9 @@ var renderPhotos = function (mock) {
 };
 
 var renderCard = function (mock) {
-  map.insertBefore(renderCardTemplate(mock), document.querySelector('.map__filters-container'));
+  var card = map.querySelector('.popup');
+  card.classList.remove('hidden');
+  fillCardTemplate(mock);
   renderFeatures(mock);
   renderPhotos(mock);
 };
@@ -252,7 +280,7 @@ var makeFormsActive = function () {
 var makeOtherActive = function () {
   document.querySelector('.map').classList.remove('map--faded');
   renderAllMocks(mockAds);
-  renderCard(mockAds[0]);
+  addCardTemplate();
 };
 
 mapPinMain.addEventListener('mousedown', function (evt) {
@@ -271,15 +299,21 @@ mapPinMain.addEventListener('keydown', function (evt) {
 
 // Валидация формы
 
+// Соответствие количества комнат и гостей
+
 var roomOptionsSelect = adForm.querySelector('#room_number');
 var capacityOptionsSelect = adForm.querySelector('#capacity');
 
 var checkGuestHousing = function (select) {
   var currentRoomNumber = parseInt(roomOptionsSelect.value, 10);
   var currentCapacity = parseInt(capacityOptionsSelect.value, 10);
+  roomOptionsSelect.setCustomValidity('');
+  capacityOptionsSelect.setCustomValidity('');
   if ((currentRoomNumber === 100) && (currentCapacity !== 0)) {
     select.setCustomValidity('Такое жилище не предназначено для гостей');
-  } else if (currentRoomNumber < currentCapacity) {
+  } else if ((currentRoomNumber !== 100) && (currentCapacity === 0)) {
+    select.setCustomValidity('Нужно выбрать как миниму одного гостя');
+  } else if ((currentCapacity > 0) && (currentRoomNumber < currentCapacity)) {
     select.setCustomValidity('В жилье с ' + currentRoomNumber + ' комнатой(-ами) может проживать не более ' + currentRoomNumber + ' гостей');
   } else {
     roomOptionsSelect.setCustomValidity('');
@@ -288,7 +322,6 @@ var checkGuestHousing = function (select) {
 };
 
 checkGuestHousing(roomOptionsSelect);
-checkGuestHousing(capacityOptionsSelect);
 
 roomOptionsSelect.addEventListener('change', function () {
   checkGuestHousing(roomOptionsSelect);
@@ -296,4 +329,41 @@ roomOptionsSelect.addEventListener('change', function () {
 
 capacityOptionsSelect.addEventListener('change', function () {
   checkGuestHousing(capacityOptionsSelect);
+});
+
+// Соответствие типа жилья минимальной цене
+
+var typeOptionsSelect = adForm.querySelector('#type');
+var priceInput = adForm.querySelector('#price');
+
+var setMinPrice = function () {
+  var currentType = typeOptionsSelect.value;
+  var currentMinPrice;
+
+  for (var i = 0; i < TYPES.length; i++) {
+    if (currentType === TYPES[i]) {
+      currentMinPrice = MIN_PRICES[i];
+    }
+  }
+  priceInput.placeholder = currentMinPrice;
+  priceInput.min = currentMinPrice;
+};
+
+setMinPrice();
+
+typeOptionsSelect.addEventListener('change', function () {
+  setMinPrice();
+  priceInput.value = '';
+});
+
+// Синхронизация времени заезда и выезда
+var timeInOptionsSelect = adForm.querySelector('#timein');
+var timeOutOptionsSelect = adForm.querySelector('#timeout');
+
+timeInOptionsSelect.addEventListener('change', function () {
+  timeOutOptionsSelect.value = timeInOptionsSelect.value;
+});
+
+timeOutOptionsSelect.addEventListener('change', function () {
+  timeInOptionsSelect.value = timeOutOptionsSelect.value;
 });
