@@ -183,8 +183,26 @@ var cardTemplate = document.querySelector('#card')
     .content
     .querySelector('.popup');
 
-var renderCardTemplate = function (mock) {
+var addCardTemplate = function () {
   var card = cardTemplate.cloneNode(true);
+  card.classList.add('hidden');
+  map.insertBefore(card, document.querySelector('.map__filters-container'));
+
+  var cardCloseButton = card.querySelector('.popup__close');
+
+  cardCloseButton.addEventListener('click', function () {
+    card.classList.add('hidden');
+  });
+
+  document.addEventListener('keydown', function (evt) {
+    if (evt.key === ESC_KEY) {
+      card.classList.add('hidden');
+    }
+  });
+};
+
+var fillCardTemplate = function (mock) {
+  var card = map.querySelector('.popup');
   card.querySelector('.popup__avatar').src = mock.author.avatar;
   card.querySelector('.popup__title').textContent = mock.offer.title;
   card.querySelector('.popup__text--price').textContent = mock.offer.price + '₽/ночь';
@@ -225,21 +243,11 @@ var renderPhotos = function (mock) {
 };
 
 var renderCard = function (mock) {
-  map.insertBefore(renderCardTemplate(mock), document.querySelector('.map__filters-container'));
+  var card = map.querySelector('.popup');
+  card.classList.remove('hidden');
+  fillCardTemplate(mock);
   renderFeatures(mock);
   renderPhotos(mock);
-
-  var popupWindow = map.querySelector('.popup');
-  var popupCloseButton = popupWindow.querySelector('.popup__close');
-
-  popupCloseButton.addEventListener('click', function () {
-    popupWindow.remove();
-  });
-  document.addEventListener('keydown', function (evt) {
-    if (evt.key === ESC_KEY) {
-      popupWindow.remove();
-    }
-  });
 };
 
 // Преобразование в активное состояние
@@ -272,6 +280,7 @@ var makeFormsActive = function () {
 var makeOtherActive = function () {
   document.querySelector('.map').classList.remove('map--faded');
   renderAllMocks(mockAds);
+  addCardTemplate();
 };
 
 mapPinMain.addEventListener('mousedown', function (evt) {
