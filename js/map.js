@@ -44,6 +44,8 @@
     formAddress.value = getPinAddress(mapPinMain);
   };
 
+  var isUnactive = document.querySelector('.map').classList.contains('map--faded');
+
   var makeOtherActive = function () {
     document.querySelector('.map').classList.remove('map--faded');
     window.pins.renderAll(window.data.mockAds);
@@ -52,9 +54,13 @@
 
   var onPinMouseDown = function (pin) {
     pin.addEventListener('mousedown', function (evt) {
-
       if (evt.which === CLICK) {
         evt.preventDefault();
+
+        if (isUnactive) {
+          makeFormsActive();
+          makeOtherActive();
+        }
 
         var startCoords = {
           x: evt.clientX,
@@ -81,7 +87,9 @@
             pin.style.left = (pinLeftBorder - pinXOffset) + 'px';
           } else if (getPinX(pin) > pinRightBorder) {
             pin.style.left = (pinRightBorder - pinXOffset) + 'px';
-          } else if (getPinY(pin) < pinTopBorder) {
+          }
+
+          if (getPinY(pin) < pinTopBorder) {
             pin.style.top = (pinTopBorder - pinYOffset) + 'px';
           } else if (getPinY(pin) > pinBottomBorder) {
             pin.style.top = (pinBottomBorder - pinYOffset) + 'px';
