@@ -2,56 +2,101 @@
 
 // Преобразование в активное состояние
 
-(function () {
-  var ENTER_KEY = 'Enter';
-  var CLICK = 1;
-  var adForm = document.querySelector('.ad-form');
-  var adFormItems = adForm.children;
-  var mapFilters = document.querySelector('.map__filters');
-  var mapFiltersItems = mapFilters.children;
-  var mapPinMain = document.querySelector('.map__pin--main');
-  var formAddress = adForm.querySelector('#address');
-  var pinXOffset = 65 / 2;
-  var pinYOffset = 65 + 22;
 
-  var getPinAddress = function (pinButton) {
-    var buttonLeft = pinButton.style.left;
-    var buttonTop = pinButton.style.top;
-    var x = parseInt(buttonLeft, 10) + Math.round(pinXOffset);
-    var y = parseInt(buttonTop, 10) + Math.round(pinYOffset);
-    return x + ', ' + y;
-  };
+var ENTER_KEY = 'Enter';
+var CLICK = 1;
+var adForm = document.querySelector('.ad-form');
+var adFormItems = adForm.children;
+var mapFilters = document.querySelector('.map__filters');
+var mapFiltersItems = mapFilters.children;
+var mapPinMain = document.querySelector('.map__pin--main');
+var formAddress = adForm.querySelector('#address');
+var pinXOffset = 65 / 2;
+var pinYOffset = 65 + 22;
 
-  var makeFormsActive = function () {
-    for (var i = 0; i < adFormItems.length; i++) {
-      adFormItems[i].removeAttribute('disabled');
-    }
+var getPinX = function (pinButton) {
+  return parseInt(pinButton.style.left, 10) + Math.round(pinXOffset);
+};
 
-    for (var j = 0; j < mapFiltersItems.length; j++) {
-      mapFiltersItems[j].removeAttribute('disabled');
-    }
+var getPinY = function (pinButton) {
+  return parseInt(pinButton.style.top, 10) + Math.round(pinYOffset);
+};
 
-    adForm.classList.remove('ad-form--disabled');
-    formAddress.value = getPinAddress(mapPinMain);
-  };
+var getPinAddress = function (pinButton) {
 
-  var makeOtherActive = function () {
-    document.querySelector('.map').classList.remove('map--faded');
-    window.pins.renderAll(window.data.mockAds);
-    window.card.addCardTemplate();
-  };
+  return getPinX(pinButton) + ', ' + getPinY(pinButton);
+};
 
-  mapPinMain.addEventListener('mousedown', function (evt) {
+var makeFormsActive = function () {
+  for (var i = 0; i < adFormItems.length; i++) {
+    adFormItems[i].removeAttribute('disabled');
+  }
+
+  for (var j = 0; j < mapFiltersItems.length; j++) {
+    mapFiltersItems[j].removeAttribute('disabled');
+  }
+
+  adForm.classList.remove('ad-form--disabled');
+  formAddress.value = getPinAddress(mapPinMain);
+};
+
+var makeOtherActive = function () {
+  document.querySelector('.map').classList.remove('map--faded');
+  window.pins.renderAll(window.data.mockAds);
+  window.card.addCardTemplate();
+};
+
+var onPinMouseDown = function (pin) {
+  pin.addEventListener('mousedown', function (evt) {
+
     if (evt.which === CLICK) {
-      makeFormsActive();
-      makeOtherActive();
-    }
-  });
+      evt.preventDefault();
 
-  mapPinMain.addEventListener('keydown', function (evt) {
-    if (evt.key === ENTER_KEY) {
-      makeFormsActive();
-      makeOtherActive();
+      var startCoords = {
+        x: evt.clientX,
+        y: evt.clientY
+      };
+
+      var onMouseMove = function (moveEvt) {
+        moveEvt.preventDefault();
+
+        var shift = {
+          x: startCoords.x - moveEvt.clientX,
+          y: startCoords.y - moveEvt.clientY
+        };
+
+        startCoords = {
+          x: moveEvt.clientX,
+          y: moveEvt.clientY
+        };
+
+        pin.style.top = (pin.offsetTop - shift.y) + 'px';
+        pin.style.left = (pin.offsetLeft - shift.x) + 'px';
+        formAddress.value = getPinAddress(pin);
+
+      };
+
+      var onMouseUp = function (upEvt) {
+        upEvt.preventDefault();
+
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+        makeFormsActive();
+        makeOtherActive();
+      };
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
     }
   });
-})();
+}
+
+onPinMouseDown(mapPinMain);
+
+mapPinMain.addEventListener('keydown', function (evt) {
+  if (evt.key === ENTER_KEY) {
+    makeFormsActive();
+    makeOtherActive();
+  }
+});
+
