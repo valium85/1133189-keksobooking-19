@@ -18,6 +18,26 @@
   var pinXOffset = 65 / 2;
   var pinYOffset = 65 + 22;
 
+  // Сценарии работы с сервером
+
+  var onError = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; color: white; background-color: red;';
+    node.style.position = 'fixed';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
+  var onDownloadSuccess = function (mocksArr) {
+    window.pins.renderAll(mocksArr);
+  };
+
+  // Вычисление координат пина
+
   var getPinX = function (pinButton) {
     return parseInt(pinButton.style.left, 10) + Math.round(pinXOffset);
   };
@@ -30,6 +50,8 @@
 
     return getPinX(pinButton) + ', ' + getPinY(pinButton);
   };
+
+  // Активация карты
 
   var makeFormsActive = function () {
     for (var i = 0; i < adFormItems.length; i++) {
@@ -48,7 +70,7 @@
 
   var makeOtherActive = function () {
     document.querySelector('.map').classList.remove('map--faded');
-    window.pins.renderAll(window.data.mockAds);
+    window.backend.download(onDownloadSuccess, onError);
     window.card.addCardTemplate();
   };
 
@@ -103,8 +125,6 @@
 
           document.removeEventListener('mousemove', onMouseMove);
           document.removeEventListener('mouseup', onMouseUp);
-          makeFormsActive();
-          makeOtherActive();
         };
 
         document.addEventListener('mousemove', onMouseMove);
