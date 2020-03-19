@@ -2,45 +2,44 @@
 
 // Блок всплывающих окон
 
-//(function () {
-  var ENTER_KEY = 'Enter';
-  var mapPins = document.querySelector('.map__pins');
-  var pinTemplate = document.querySelector('#pin')
+(function () {
+
+  var ESC_KEY = 'Escape';
+  var main = document.querySelector('main');
+
+  var successTemplate = document.querySelector('#success')
+        .content
+        .querySelector('.success');
+  var errorTemplate = document.querySelector('#error')
       .content
-      .querySelector('.map__pin');
+      .querySelector('.error');
 
-  var pinXOffset = 50 / 2; // Смещение по горизонтали для кончика булавки относительно л/в угла элемента
-  var pinYOffset = 70; // Смещение по вертикали для кончика булавки л/в угла элемента
 
-  var renderMockPin = function (mock) {
-    var mockPin = pinTemplate.cloneNode(true);
+  var getPopupMessage = function (template) {
+    var popupMessage = template.cloneNode(true);
+    popupMessage.classList.add('hidden');
 
-    mockPin.style.left = (mock.location.x - pinXOffset) + 'px';
-    mockPin.style.top = (mock.location.y - pinYOffset) + 'px';
-    mockPin.querySelector('img').src = mock.author.avatar;
-    mockPin.querySelector('img').alt = mock.offer.title;
-    mockPin.addEventListener('click', function () {
-      window.card.renderCard(mock);
+    document.addEventListener('click', function () {
+      popupMessage.classList.add('hidden');
     });
-    mockPin.addEventListener('keydown', function (evt) {
-      if (evt.key === ENTER_KEY) {
-        window.card.renderCard(mock);
+    document.addEventListener('keydown', function (evt) {
+      if (evt.key === ESC_KEY) {
+        popupMessage.classList.add('hidden');
       }
     });
-    return mockPin;
-  };// Функция для отрисовки пина, на вход принимает данные из архива, сгенерированного раньше (объект)
-
-  var renderAllMocks = function (mocksArr) {
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < mocksArr.length; i++) {
-      fragment.appendChild(renderMockPin(mocksArr[i]));
-    }
-    mapPins.appendChild(fragment);
-  };// Cоздает фрагмент с пинами, потом отрисовывает весь фрагмент
-
-  window.pins = {
-    renderPin: renderMockPin,
-    renderAll: renderAllMocks
+    return popupMessage;
   };
 
-//})();
+  var renderSuccessMessage = function () {
+    var successMessage = getPopupMessage(successTemplate);
+    main.appendChild(successMessage);
+  };
+
+  var renderErrorMessage = function () {
+    var errorMessage = getPopupMessage(errorTemplate);
+    main.appendChild(errorMessage);
+  };
+
+  renderSuccessMessage();
+  renderErrorMessage();
+})();

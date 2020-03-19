@@ -2,7 +2,7 @@
 
 // Преобразование в неактивное состояние
 
-//(function () {
+(function () {
   var map = document.querySelector('.map');
   var mapPinsBlock = map.querySelector('.map__pins');
   var mapPinMain = map.querySelector('.map__pin--main');
@@ -34,9 +34,9 @@
     for (var j = 0; j < mapFiltersItems.length; j++) {
       mapFiltersItems[j].setAttribute('disabled', 'disabled');
     }
-  }
+  };
 
   deactivate();
 
   window.deactivate = deactivate;
-//})();
+})();

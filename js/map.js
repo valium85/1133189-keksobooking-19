@@ -5,6 +5,7 @@
 (function () {
   var ENTER_KEY = 'Enter';
   var CLICK = 1;
+  var main = document.querySelector('main');
   var adForm = document.querySelector('.ad-form');
   var adFormItems = adForm.children;
   var mapFilters = document.querySelector('.map__filters');
@@ -35,6 +36,7 @@
   var onDownloadSuccess = function (mocksArr) {
     window.pins.renderAll(mocksArr);
   };
+
 
   // Вычисление координат пина
 
@@ -144,11 +146,29 @@
     }
   });
 
-  // Работа карты
+  // Отправка формы
+
+  var onUploadSuccess = function (/* response */) {
+    window.deactivate();
+    adForm.reset();
+    main.querySelector('.success').classList.remove('hidden');
+  };
+
+  var onUploadError = function () {
+    main.querySelector('.error').classList.remove('hidden');
+  };
+
+  adForm.addEventListener('submit', function (evt) {
+    window.backend.upload(new FormData(adForm), onUploadSuccess, onUploadError);
+    evt.preventDefault();
+  });
+
+  // Сброс формы
 
   var clearButton = adForm.querySelector('.ad-form__reset');
   clearButton.addEventListener('click', function () {
     window.deactivate();
+    adForm.reset();
   });
 
 })();
