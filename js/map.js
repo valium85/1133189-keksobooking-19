@@ -51,6 +51,8 @@
     return getPinX(pinButton) + ', ' + getPinY(pinButton);
   };
 
+  formAddress.value = getPinAddress(mapPinMain);
+
   // Активация карты
 
   var makeFormsActive = function () {
@@ -140,6 +142,13 @@
       makeFormsActive();
       makeOtherActive();
     }
+  });
+
+  // Работа карты
+
+  var clearButton = adForm.querySelector('.ad-form__reset');
+  clearButton.addEventListener('click', function () {
+    window.deactivate();
   });
 
 })();
