@@ -3,7 +3,7 @@
 // Отправка на сервер и получение с сервера информации
 
 (function () {
-  // var UPLOAD_URL = 'https://js.dump.academy/*****';
+  var UPLOAD_URL = 'https://js.dump.academy/keksobooking';
   var DOWNLOAD_URL = 'https://js.dump.academy/keksobooking/data';
   var StatusCode = {
     OK: 200
