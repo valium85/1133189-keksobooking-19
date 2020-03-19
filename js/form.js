@@ -4,7 +4,7 @@
 
 (function () {
   var adForm = document.querySelector('.ad-form');
-  var TYPES = window.data.TYPES;
+  var TYPES = ['palace', 'flat', 'house', 'bungalo'];
   var MIN_PRICES = [10000, 1000, 5000, 0];
 
   // Соответствие количества комнат и гостей
@@ -65,6 +65,7 @@
   });
 
   // Синхронизация времени заезда и выезда
+
   var timeInOptionsSelect = adForm.querySelector('#timein');
   var timeOutOptionsSelect = adForm.querySelector('#timeout');
 

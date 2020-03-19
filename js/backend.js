@@ -3,12 +3,37 @@
 // Отправка на сервер и получение с сервера информации
 
 (function () {
-  // var UPLOAD_URL = 'https://js.dump.academy/*****';
+  var UPLOAD_URL = 'https://js.dump.academy/keksobooking';
   var DOWNLOAD_URL = 'https://js.dump.academy/keksobooking/data';
   var StatusCode = {
     OK: 200
   };
   var TIMEOUT_IN_MS = 10000;
+
+  var upload = function (data, onLoad, onError) {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+
+    xhr.addEventListener('load', function () {
+      if (xhr.status === StatusCode.OK) {
+        onLoad(xhr.response);
+      } else {
+        onError();
+      }
+    });
+    xhr.addEventListener('error', function () {
+      onError();
+    });
+    xhr.addEventListener('timeout', function () {
+      onError();
+    });
+
+    xhr.timeout = TIMEOUT_IN_MS;
+
+    xhr.open('POST', UPLOAD_URL);
+    xhr.send(data);
+  };
+
 
   var download = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
@@ -35,7 +60,8 @@
   };
 
   window.backend = {
-    download: download
+    download: download,
+    upload: upload
   };
 
 })();

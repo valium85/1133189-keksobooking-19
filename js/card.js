@@ -4,7 +4,7 @@
 
 (function () {
   var ESC_KEY = 'Escape';
-  var TYPES = window.data.TYPES;
+  var TYPES = ['palace', 'flat', 'house', 'bungalo'];
   var TYPES_RUS = ['Дворец', 'Квартира', 'Дом', 'Бунгало'];
 
   var getHousingType = function (mock) {
