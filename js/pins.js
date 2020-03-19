@@ -9,14 +9,14 @@
       .content
       .querySelector('.map__pin');
 
-  var pinXOffset = 65 / 2; // Смещение по горизонтали для кончика булавки относительно л/в угла элемента
-  var pinYOffset = 65 + 22; // Смещение по вертикали для кончика булавки л/в угла элемента
+  var pinXOffset = 50 / 2; // Смещение по горизонтали для кончика булавки относительно л/в угла элемента
+  var pinYOffset = 70; // Смещение по вертикали для кончика булавки л/в угла элемента
 
   var renderMockPin = function (mock) {
     var mockPin = pinTemplate.cloneNode(true);
 
-    mockPin.style.left = (mock.location.x + pinXOffset) + 'px';
-    mockPin.style.top = (mock.location.y + pinYOffset) + 'px';
+    mockPin.style.left = (mock.location.x - pinXOffset) + 'px';
+    mockPin.style.top = (mock.location.y - pinYOffset) + 'px';
     mockPin.querySelector('img').src = mock.author.avatar;
     mockPin.querySelector('img').alt = mock.offer.title;
     mockPin.addEventListener('click', function () {
