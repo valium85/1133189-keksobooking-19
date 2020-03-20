@@ -150,7 +150,6 @@
 
   var onUploadSuccess = function (/* response */) {
     window.deactivate();
-    adForm.reset();
     main.querySelector('.success').classList.remove('hidden');
   };
 
@@ -168,7 +167,6 @@
   var clearButton = adForm.querySelector('.ad-form__reset');
   clearButton.addEventListener('click', function () {
     window.deactivate();
-    adForm.reset();
   });
 
 })();

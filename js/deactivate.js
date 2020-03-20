@@ -8,7 +8,9 @@
   var mapPinMain = map.querySelector('.map__pin--main');
   var defaultXPin = 570;
   var defaultYPin = 375;
+  var defaultAddress = '603, 462';
   var adForm = document.querySelector('.ad-form');
+  var formAddress = adForm.querySelector('#address');
   var adFormItems = adForm.children;
   var mapFilters = document.querySelector('.map__filters');
   var mapFiltersItems = mapFilters.children;
@@ -21,6 +23,14 @@
   };
 
   var deactivate = function () {
+    adForm.reset();
+    formAddress.value = defaultAddress;
+
+    var popupCard = document.querySelector('.popup');
+    if (popupCard) {
+      popupCard.classList.add('hidden');
+    }
+
     clearPins();
     map.classList.add('map--faded');
     adForm.classList.add('ad-form--disabled');
