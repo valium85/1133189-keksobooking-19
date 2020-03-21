@@ -22,23 +22,16 @@
   // Сценарии работы с сервером
 
   var onDownloadError = function (errorMessage) {
-    var errorPopup = main.querySelector('.error').classList.remove('hidden');
+    var errorPopup = main.querySelector('.error');
     var errorText = errorPopup.querySelector('.error__message');
 
-    /*errorText.textContent = errorMessage;
-    errorPopup.classList.remove('hidden');*/
-  };
+    var showMessage = function () {
+      errorText.textContent = errorMessage;
+      errorPopup.classList.remove('hidden');
+    };
 
-  var onError = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; color: white; background-color: red;';
-    node.style.position = 'fixed';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
+    setTimeout(showMessage, 500);
+    showMessage();
   };
 
   var onDownloadSuccess = function (mocksArr) {
@@ -47,7 +40,6 @@
     window.pins.renderAll(mocksArr);
     makeFormsActive();
   };
-
 
   // Вычисление координат пина
 

@@ -8,7 +8,7 @@
   var StatusCode = {
     OK: 200
   };
-  var TIMEOUT_IN_MS = 1;
+  var TIMEOUT_IN_MS = 10000;
 
   var makeRequest = function (onLoad, onError, xhr) {
     xhr.responseType = 'json';
@@ -30,8 +30,7 @@
     });
 
     xhr.timeout = TIMEOUT_IN_MS;
-  }
-
+  };
 
   var upload = function (data, onLoad, onError) {
     var xhr = new XMLHttpRequest();
