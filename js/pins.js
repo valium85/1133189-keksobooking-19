@@ -32,7 +32,9 @@
 
   var renderAllMocks = function (mocksArr) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < mocksArr.length; i++) {
+    var count = mocksArr.length > 5 ? 5 : mocksArr.length;
+
+    for (var i = 0; i < count; i++) {
       fragment.appendChild(renderMockPin(mocksArr[i]));
     }
     mapPins.appendChild(fragment);
@@ -40,7 +42,8 @@
 
   window.pins = {
     renderPin: renderMockPin,
-    renderAll: renderAllMocks
+    renderAll: renderAllMocks,
+    pinsData: []
   };
 
 })();

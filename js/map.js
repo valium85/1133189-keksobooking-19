@@ -21,22 +21,26 @@
 
   // Сценарии работы с сервером
 
-  var onError = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; color: white; background-color: red;';
-    node.style.position = 'fixed';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
+  var onDownloadError = function (errorMessage) {
+    var errorPopup = main.querySelector('.error');
+    var errorText = errorPopup.querySelector('.error__message');
 
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
+    var showMessage = function () {
+      errorText.textContent = errorMessage;
+      errorPopup.classList.remove('hidden');
+    };
+
+    setTimeout(showMessage, 500);
+    showMessage();
   };
 
-  var onDownloadSuccess = function (mocksArr) {
-    window.pins.renderAll(mocksArr);
+  var onDownloadSuccess = function (pinsArr) {
+    document.querySelector('.map').classList.remove('map--faded');
+    window.card.addCardTemplate();
+    window.pins.renderAll(pinsArr);
+    makeFormsActive();
+    window.pins.pinsData = pinsArr;
   };
-
 
   // Вычисление координат пина
 
@@ -72,20 +76,13 @@
 
   var isUnactive = document.querySelector('.map').classList.contains('map--faded');
 
-  var makeOtherActive = function () {
-    document.querySelector('.map').classList.remove('map--faded');
-    window.backend.download(onDownloadSuccess, onError);
-    window.card.addCardTemplate();
-  };
-
   var onPinMouseDown = function (pin) {
     pin.addEventListener('mousedown', function (evt) {
       if (evt.which === CLICK) {
         evt.preventDefault();
 
         if (isUnactive) {
-          makeFormsActive();
-          makeOtherActive();
+          window.backend.download(onDownloadSuccess, onDownloadError);
         }
 
         var startCoords = {
@@ -141,8 +138,7 @@
 
   mapPinMain.addEventListener('keydown', function (evt) {
     if (evt.key === ENTER_KEY) {
-      makeFormsActive();
-      makeOtherActive();
+      window.backend.download(onDownloadSuccess, onDownloadError);
     }
   });
 
@@ -150,7 +146,6 @@
 
   var onUploadSuccess = function (/* response */) {
     window.deactivate();
-    adForm.reset();
     main.querySelector('.success').classList.remove('hidden');
   };
 
@@ -168,7 +163,5 @@
   var clearButton = adForm.querySelector('.ad-form__reset');
   clearButton.addEventListener('click', function () {
     window.deactivate();
-    adForm.reset();
   });
-
 })();
