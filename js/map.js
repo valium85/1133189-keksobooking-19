@@ -21,6 +21,14 @@
 
   // Сценарии работы с сервером
 
+  var onDownloadError = function (errorMessage) {
+    var errorPopup = main.querySelector('.error').classList.remove('hidden');
+    var errorText = errorPopup.querySelector('.error__message');
+
+    /*errorText.textContent = errorMessage;
+    errorPopup.classList.remove('hidden');*/
+  };
+
   var onError = function (errorMessage) {
     var node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; text-align: center; color: white; background-color: red;';
@@ -34,7 +42,10 @@
   };
 
   var onDownloadSuccess = function (mocksArr) {
+    document.querySelector('.map').classList.remove('map--faded');
+    window.card.addCardTemplate();
     window.pins.renderAll(mocksArr);
+    makeFormsActive();
   };
 
 
@@ -72,11 +83,11 @@
 
   var isUnactive = document.querySelector('.map').classList.contains('map--faded');
 
-  var makeOtherActive = function () {
+/*  var makeOtherActive = function () {
     document.querySelector('.map').classList.remove('map--faded');
-    window.backend.download(onDownloadSuccess, onError);
+    window.backend.download(onDownloadSuccess, onDownloadError);
     window.card.addCardTemplate();
-  };
+  };*/
 
   var onPinMouseDown = function (pin) {
     pin.addEventListener('mousedown', function (evt) {
@@ -84,8 +95,7 @@
         evt.preventDefault();
 
         if (isUnactive) {
-          makeFormsActive();
-          makeOtherActive();
+          window.backend.download(onDownloadSuccess, onDownloadError);
         }
 
         var startCoords = {
@@ -141,8 +151,7 @@
 
   mapPinMain.addEventListener('keydown', function (evt) {
     if (evt.key === ENTER_KEY) {
-      makeFormsActive();
-      makeOtherActive();
+      window.backend.download(onDownloadSuccess, onDownloadError);
     }
   });
 
@@ -168,5 +177,4 @@
   clearButton.addEventListener('click', function () {
     window.deactivate();
   });
-
 })();

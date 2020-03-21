@@ -8,35 +8,11 @@
   var StatusCode = {
     OK: 200
   };
-  var TIMEOUT_IN_MS = 10000;
+  var TIMEOUT_IN_MS = 1;
 
-  var upload = function (data, onLoad, onError) {
-    var xhr = new XMLHttpRequest();
+  var makeRequest = function (onLoad, onError, xhr) {
     xhr.responseType = 'json';
 
-    xhr.addEventListener('load', function () {
-      if (xhr.status === StatusCode.OK) {
-        onLoad(xhr.response);
-      } else {
-        onError();
-      }
-    });
-    xhr.addEventListener('error', function () {
-      onError();
-    });
-    xhr.addEventListener('timeout', function () {
-      onError();
-    });
-
-    xhr.timeout = TIMEOUT_IN_MS;
-
-    xhr.open('POST', UPLOAD_URL);
-    xhr.send(data);
-  };
-
-
-  var download = function (onLoad, onError) {
-    var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
@@ -54,7 +30,20 @@
     });
 
     xhr.timeout = TIMEOUT_IN_MS;
+  }
 
+
+  var upload = function (data, onLoad, onError) {
+    var xhr = new XMLHttpRequest();
+    makeRequest(onLoad, onError, xhr);
+    xhr.open('POST', UPLOAD_URL);
+    xhr.send(data);
+  };
+
+
+  var download = function (onLoad, onError) {
+    var xhr = new XMLHttpRequest();
+    makeRequest(onLoad, onError, xhr);
     xhr.open('GET', DOWNLOAD_URL);
     xhr.send();
   };
@@ -65,8 +54,3 @@
   };
 
 })();
-
-
-/*
-3) Оптимизировать код там где он дублируется
-4) переделать на модалку с ошибкой*/
