@@ -20,7 +20,14 @@
     mockPin.querySelector('img').src = mock.author.avatar;
     mockPin.querySelector('img').alt = mock.offer.title;
     mockPin.addEventListener('click', function () {
+      var previousPin = mapPins.querySelector('.map__pin--active');
+      if (previousPin) {
+        previousPin.classList.remove('map__pin--active');
+      }
+
+      mockPin.classList.add('map__pin--active');
       window.card.renderCard(mock);
+
     });
     mockPin.addEventListener('keydown', function (evt) {
       if (evt.key === ENTER_KEY) {

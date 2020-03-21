@@ -1,6 +1,6 @@
 'use strict';
 
-// Преобразование в активное состояние и перетаскивание метки
+// Все главные действия на основной карте, включая сценарии сервера
 
 (function () {
   var ENTER_KEY = 'Enter';
@@ -144,7 +144,7 @@
 
   // Отправка формы
 
-  var onUploadSuccess = function (/* response */) {
+  var onUploadSuccess = function () {
     window.deactivate();
     main.querySelector('.success').classList.remove('hidden');
   };
