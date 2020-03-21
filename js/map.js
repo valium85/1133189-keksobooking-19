@@ -34,11 +34,12 @@
     showMessage();
   };
 
-  var onDownloadSuccess = function (mocksArr) {
+  var onDownloadSuccess = function (pinsArr) {
     document.querySelector('.map').classList.remove('map--faded');
     window.card.addCardTemplate();
-    window.pins.renderAll(mocksArr);
+    window.pins.renderAll(pinsArr);
     makeFormsActive();
+    window.pins.pinsData = pinsArr;
   };
 
   // Вычисление координат пина
@@ -74,12 +75,6 @@
   };
 
   var isUnactive = document.querySelector('.map').classList.contains('map--faded');
-
-/*  var makeOtherActive = function () {
-    document.querySelector('.map').classList.remove('map--faded');
-    window.backend.download(onDownloadSuccess, onDownloadError);
-    window.card.addCardTemplate();
-  };*/
 
   var onPinMouseDown = function (pin) {
     pin.addEventListener('mousedown', function (evt) {

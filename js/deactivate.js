@@ -24,6 +24,7 @@
 
   var deactivate = function () {
     adForm.reset();
+    mapFilters.reset();
     formAddress.value = defaultAddress;
 
     var popupCard = document.querySelector('.popup');
