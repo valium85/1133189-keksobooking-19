@@ -33,8 +33,11 @@
         return (valuePin > 50000);
       }
 
-      default:
       case 'any': {
+        return true;
+      }
+
+      default: {
         return true;
       }
     }
