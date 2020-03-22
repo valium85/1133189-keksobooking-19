@@ -36,7 +36,6 @@
   };
 
   var onDownloadSuccess = function (pinsArr) {
-    document.querySelector('.map').classList.remove('map--faded');
     window.card.addCardTemplate();
     window.pins.renderAll(pinsArr);
     makeFormsActive();
@@ -75,12 +74,13 @@
     formAddress.value = getPinAddress(mapPinMain);
   };
 
-  var isUnactive = document.querySelector('.map').classList.contains('map--faded');
 
   var onPinMouseDown = function (pin) {
     pin.addEventListener('mousedown', function (evt) {
       if (evt.which === CLICK) {
+        var isUnactive = document.querySelector('.map').classList.contains('map--faded');
         evt.preventDefault();
+        document.querySelector('.map').classList.remove('map--faded');
 
         if (isUnactive) {
           window.backend.download(onDownloadSuccess, onDownloadError);
