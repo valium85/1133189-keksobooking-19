@@ -11,6 +11,7 @@
   var PIN_BOTTOM_BORDER = 630;
   var PIN_X_OFFSET = 65 / 2;
   var PIN_Y_OFFSET = 65 + 22;
+  var SHOW_MESSAGE_DELAY = 500;
   var main = document.querySelector('main');
   var adForm = document.querySelector('.ad-form');
   var adFormItems = adForm.children;
@@ -30,7 +31,7 @@
       errorPopup.classList.remove('hidden');
     };
 
-    setTimeout(showMessage, 500);
+    setTimeout(showMessage, SHOW_MESSAGE_DELAY);
     showMessage();
   };
 

@@ -6,6 +6,7 @@
   var ENTER_KEY = 'Enter';
   var PIN_X_OFFSET = 50 / 2; // Смещение по горизонтали для кончика булавки относительно л/в угла элемента
   var PIN_Y_OFFSET = 70; // Смещение по вертикали для кончика булавки л/в угла элемента
+  var MAX_PINS_ALLOWED = 5;
   var mapPins = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin')
       .content
@@ -38,7 +39,7 @@
 
   var renderAllMocks = function (mocksArr) {
     var fragment = document.createDocumentFragment();
-    var count = mocksArr.length > 5 ? 5 : mocksArr.length;
+    var count = mocksArr.length > MAX_PINS_ALLOWED ? MAX_PINS_ALLOWED : mocksArr.length;
 
     for (var i = 0; i < count; i++) {
       fragment.appendChild(renderMockPin(mocksArr[i]));
