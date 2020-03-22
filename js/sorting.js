@@ -3,6 +3,8 @@
 // Сортировка и показ похожих объявлений
 
 (function () {
+  var MIDDLE_PRICE_BOTTOM = 10000;
+  var MIDDLE_PRICE_TOP = 50000;
   var map = document.querySelector('.map');
   var mapFilters = map.querySelector('.map__filters');
   var mapPinsBlock = map.querySelector('.map__pins');
@@ -22,15 +24,15 @@
 
     switch (valueFilter) {
       case 'low': {
-        return valuePin < 10000;
+        return valuePin < MIDDLE_PRICE_BOTTOM;
       }
 
       case 'middle': {
-        return (valuePin >= 10000) && (valuePin <= 50000);
+        return (valuePin >= MIDDLE_PRICE_BOTTOM) && (valuePin <= MIDDLE_PRICE_TOP);
       }
 
       case 'high': {
-        return (valuePin > 50000);
+        return (valuePin > MIDDLE_PRICE_TOP);
       }
 
       case 'any': {
@@ -70,13 +72,25 @@
   };
 
   var filterPins = function (pinsArr, paramsObj) {
-    return pinsArr.filter(function (item) {
-      return checkType(item.offer.type, paramsObj.housingType) &&
+    var pins = [];
+
+    for (var i = 0; i < pinsArr.length; i++) {
+      if (pins.length === 5) {
+        break;
+      }
+
+      var item = pinsArr[i];
+
+      if (checkType(item.offer.type, paramsObj.housingType) &&
       checkPrice(item.offer.price, paramsObj.housingPrice) &&
       checkRooms(item.offer.rooms, paramsObj.housingRooms) &&
       checkGuests(item.offer.guests, paramsObj.housingGuests) &&
-      checkFeatures(item.offer.features, paramsObj.features);
-    });
+      checkFeatures(item.offer.features, paramsObj.features)) {
+        pins.push(item);
+      }
+    }
+
+    return pins;
   };
 
   mapFilters.addEventListener('change', window.debounce(function () {
