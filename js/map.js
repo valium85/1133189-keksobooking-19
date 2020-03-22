@@ -5,6 +5,12 @@
 (function () {
   var ENTER_KEY = 'Enter';
   var CLICK = 1;
+  var PIN_LEFT_BORDER = 0;
+  var PIN_RIGHT_BORDER = 1200;
+  var PIN_TOP_BORDER = 130;
+  var PIN_BOTTOM_BORDER = 630;
+  var PIN_X_OFFSET = 65 / 2;
+  var PIN_Y_OFFSET = 65 + 22;
   var main = document.querySelector('main');
   var adForm = document.querySelector('.ad-form');
   var adFormItems = adForm.children;
@@ -12,12 +18,6 @@
   var mapFiltersItems = mapFilters.children;
   var mapPinMain = document.querySelector('.map__pin--main');
   var formAddress = adForm.querySelector('#address');
-  var pinLeftBorder = 0;
-  var pinRightBorder = 1200;
-  var pinTopBorder = 130;
-  var pinBottomBorder = 630;
-  var pinXOffset = 65 / 2;
-  var pinYOffset = 65 + 22;
 
   // Сценарии работы с сервером
 
@@ -45,11 +45,11 @@
   // Вычисление координат пина
 
   var getPinX = function (pinButton) {
-    return parseInt(pinButton.style.left, 10) + Math.round(pinXOffset);
+    return parseInt(pinButton.style.left, 10) + Math.round(PIN_X_OFFSET);
   };
 
   var getPinY = function (pinButton) {
-    return parseInt(pinButton.style.top, 10) + Math.round(pinYOffset);
+    return parseInt(pinButton.style.top, 10) + Math.round(PIN_Y_OFFSET);
   };
 
   var getPinAddress = function (pinButton) {
@@ -106,16 +106,16 @@
           pin.style.top = (pin.offsetTop - shift.y) + 'px';
           pin.style.left = (pin.offsetLeft - shift.x) + 'px';
 
-          if (getPinX(pin) < pinLeftBorder) {
-            pin.style.left = (pinLeftBorder - pinXOffset) + 'px';
-          } else if (getPinX(pin) > pinRightBorder) {
-            pin.style.left = (pinRightBorder - pinXOffset) + 'px';
+          if (getPinX(pin) < PIN_LEFT_BORDER) {
+            pin.style.left = (PIN_LEFT_BORDER - PIN_X_OFFSET) + 'px';
+          } else if (getPinX(pin) > PIN_RIGHT_BORDER) {
+            pin.style.left = (PIN_RIGHT_BORDER - PIN_X_OFFSET) + 'px';
           }
 
-          if (getPinY(pin) < pinTopBorder) {
-            pin.style.top = (pinTopBorder - pinYOffset) + 'px';
-          } else if (getPinY(pin) > pinBottomBorder) {
-            pin.style.top = (pinBottomBorder - pinYOffset) + 'px';
+          if (getPinY(pin) < PIN_TOP_BORDER) {
+            pin.style.top = (PIN_TOP_BORDER - PIN_Y_OFFSET) + 'px';
+          } else if (getPinY(pin) > PIN_BOTTOM_BORDER) {
+            pin.style.top = (PIN_BOTTOM_BORDER - PIN_Y_OFFSET) + 'px';
           }
 
           formAddress.value = getPinAddress(pin);
