@@ -36,7 +36,6 @@
   };
 
   var onDownloadSuccess = function (pinsArr) {
-    window.card.addCardTemplate();
     window.pins.renderAll(pinsArr);
     makeFormsActive();
     window.pins.pinsData = pinsArr;
@@ -74,6 +73,7 @@
     formAddress.value = getPinAddress(mapPinMain);
   };
 
+  window.card.addCardTemplate();
 
   var onPinMouseDown = function (pin) {
     pin.addEventListener('mousedown', function (evt) {

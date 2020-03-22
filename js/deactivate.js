@@ -10,7 +10,6 @@
   var mapPinsBlock = map.querySelector('.map__pins');
   var mapPinMain = map.querySelector('.map__pin--main');
   var adForm = document.querySelector('.ad-form');
-  var priceInput = adForm.querySelector('#price');
   var formAddress = adForm.querySelector('#address');
   var adFormItems = adForm.children;
   var mapFilters = document.querySelector('.map__filters');

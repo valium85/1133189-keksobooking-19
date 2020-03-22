@@ -72,13 +72,25 @@
   };
 
   var filterPins = function (pinsArr, paramsObj) {
-    return pinsArr.filter(function (item) {
-      return checkType(item.offer.type, paramsObj.housingType) &&
+    var pins = [];
+
+    for (var i = 0; i < pinsArr.length; i++) {
+      if (pins.length === 5) {
+        break;
+      }
+
+      var item = pinsArr[i];
+
+      if (checkType(item.offer.type, paramsObj.housingType) &&
       checkPrice(item.offer.price, paramsObj.housingPrice) &&
       checkRooms(item.offer.rooms, paramsObj.housingRooms) &&
       checkGuests(item.offer.guests, paramsObj.housingGuests) &&
-      checkFeatures(item.offer.features, paramsObj.features);
-    });
+      checkFeatures(item.offer.features, paramsObj.features)) {
+        pins.push(item);
+      }
+    }
+
+    return pins;
   };
 
   mapFilters.addEventListener('change', window.debounce(function () {
