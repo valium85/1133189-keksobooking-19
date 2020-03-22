@@ -4,19 +4,18 @@
 
 (function () {
   var ENTER_KEY = 'Enter';
+  var PIN_X_OFFSET = 50 / 2; // Смещение по горизонтали для кончика булавки относительно л/в угла элемента
+  var PIN_Y_OFFSET = 70; // Смещение по вертикали для кончика булавки л/в угла элемента
   var mapPins = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin')
       .content
       .querySelector('.map__pin');
 
-  var pinXOffset = 50 / 2; // Смещение по горизонтали для кончика булавки относительно л/в угла элемента
-  var pinYOffset = 70; // Смещение по вертикали для кончика булавки л/в угла элемента
-
   var renderMockPin = function (mock) {
     var mockPin = pinTemplate.cloneNode(true);
 
-    mockPin.style.left = (mock.location.x - pinXOffset) + 'px';
-    mockPin.style.top = (mock.location.y - pinYOffset) + 'px';
+    mockPin.style.left = (mock.location.x - PIN_X_OFFSET) + 'px';
+    mockPin.style.top = (mock.location.y - PIN_Y_OFFSET) + 'px';
     mockPin.querySelector('img').src = mock.author.avatar;
     mockPin.querySelector('img').alt = mock.offer.title;
     mockPin.addEventListener('click', function () {

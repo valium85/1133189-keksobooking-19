@@ -5,10 +5,10 @@
 (function () {
   var UPLOAD_URL = 'https://js.dump.academy/keksobooking';
   var DOWNLOAD_URL = 'https://js.dump.academy/keksobooking/data';
+  var TIMEOUT_IN_MS = 10000;
   var StatusCode = {
     OK: 200
   };
-  var TIMEOUT_IN_MS = 10000;
 
   var makeRequest = function (onLoad, onError, xhr) {
     xhr.responseType = 'json';
